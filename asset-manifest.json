@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "//jason-and-ong-soa.github.io/CA2-SOA-Frontend/static/css/main.aba928fb.css",
+    "main.js": "//jason-and-ong-soa.github.io/CA2-SOA-Frontend/static/js/main.88b94a7f.js",
+    "index.html": "//jason-and-ong-soa.github.io/CA2-SOA-Frontend/index.html",
+    "main.aba928fb.css.map": "//jason-and-ong-soa.github.io/CA2-SOA-Frontend/static/css/main.aba928fb.css.map",
+    "main.88b94a7f.js.map": "//jason-and-ong-soa.github.io/CA2-SOA-Frontend/static/js/main.88b94a7f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.aba928fb.css",
+    "static/js/main.88b94a7f.js"
+  ]
+}

@@ -1,0 +1,1 @@
+const backendApiUrlBase = 'http://localhost:5000/'

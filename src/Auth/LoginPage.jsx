@@ -1,11 +1,41 @@
+import axios from 'axios';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { backendApiUrlBase } from '../constants';
 
 export const LoginPage = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+
+  const validateInputs = () => {
+    const newErrors = {};
+    if (!email) newErrors.email = 'Email is required';
+    if (!password) newErrors.password = 'Password is required';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+};
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login submission logic here
-    console.log("Login submitted");
+
+    axios
+      .post(`${backendApiUrlBase}/Auth/login`,
+        { email, password },
+        { withCredentials: false }
+      )
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.error(err);
+        console.log(err)
+        setMessage(err.response.data);
+      });
+
   };
 
   return (
@@ -19,8 +49,11 @@ export const LoginPage = () => {
               placeholder="Username"
               name="username"
               required
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            
+            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
           </div>
           <div>
             <input
@@ -28,8 +61,10 @@ export const LoginPage = () => {
               placeholder="Password"
               name="password"
               required
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
           <button
             type="submit"

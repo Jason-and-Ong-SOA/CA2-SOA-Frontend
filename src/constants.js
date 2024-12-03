@@ -1,1 +1,1 @@
-const backendApiUrlBase = 'http://localhost:5000/'
+export const backendApiUrlBase = 'http://mapspi.duckdns.org'

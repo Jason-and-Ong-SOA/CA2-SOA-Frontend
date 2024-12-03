@@ -12,7 +12,7 @@ import { LoginPage } from './Auth/LoginPage';
 const router = createHashRouter([
   {
     path: "/",
-    element: <h1>Initial</h1>
+    element: <h1>o</h1>
   },
 
   {

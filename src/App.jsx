@@ -1,5 +1,6 @@
 import { RegisterPage } from "./Auth/RegisterPage";
 
+var user = null;
 
 function App() {
   return (

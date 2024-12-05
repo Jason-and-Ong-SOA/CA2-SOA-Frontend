@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { backendApiUrlBase } from "../constants";
+import Navbar from "../Components/Navbar";
 
 const AddPostPage = () => {
     const [title, setTitle] = useState("");
@@ -68,6 +69,9 @@ const AddPostPage = () => {
                 setTitle("");
                 setDescription("");
                 setPictures([]);
+                setTimeout(() => {
+                  navigate('/');
+              }, 500);
             }
         } catch (error) {
             console.error("Error submitting post:", error);
@@ -76,6 +80,9 @@ const AddPostPage = () => {
     };
 
     return (
+      
+      <div className="container mx-auto p-4">
+          <Navbar/>
         <div className="max-w-3xl mx-auto p-6 bg-gray-100 rounded shadow-md">
             <h1 className="text-2xl font-bold mb-4">Create a New Post</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -118,6 +125,7 @@ const AddPostPage = () => {
                     Create Post
                 </button>
             </form>
+        </div>
         </div>
     );
 };

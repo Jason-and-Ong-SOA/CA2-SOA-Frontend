@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { backendApiUrlBase } from '../constants';
 import { jwtDecode } from 'jwt-decode';
+import Navbar from '../Components/Navbar';
 
 const PostPage = () => {
     const { id } = useParams();
@@ -12,9 +13,11 @@ const PostPage = () => {
 
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [newReply, setNewReply] = useState('');
     const [authToken] = useState(localStorage.getItem('auth'));
     const [currentUserId] = useState(authToken ? jwtDecode(authToken).UserId : null);
-
+    const [likeNum, setLikeNum] = useState(0);
+    const [dislikeNum, setDislikeNum] = useState(0);
     useEffect(() => {
         const fetchPost = async () => {
             try {
@@ -22,6 +25,8 @@ const PostPage = () => {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
                 setPost(response.data);
+                setLikeNum(response.data.likes == null ? 0 : response.data.likes.length);
+                setDislikeNum(response.data.dislikes == null ? 0 : response.data.dislikes.length);
             } catch (error) {
                 console.error('Error fetching post:', error);
             }
@@ -32,18 +37,26 @@ const PostPage = () => {
                 const response = await axios.get(`${backendApiUrlBase}/api/Post/${id}/Comment`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
-                setComments(response.data);
+                
+                var temp = response.data;
+                 temp.forEach(async c =>{
+                  var reply = await fetchReplies(c.id)
+                  c.replies = reply;
+                });
+                setComments(temp);
+                
+                console.log(comments);
             } catch (error) {
                 console.error('Error fetching comments:', error);
             }
         };
 
-        const fetchReplies = async () => {
+        const fetchReplies = async (cId) => {
             try {
-                const response = await axios.get(`${backendApiUrlBase}/api/Post/${id}/Comment`, {
+                const response = await axios.get(`${backendApiUrlBase}/api/Post/${id}/Comment/${cId}/Reply`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
-                setComments(response.data);
+                return response.data;
             } catch (error) {
                 console.error('Error fetching comments:', error);
             }
@@ -55,9 +68,13 @@ const PostPage = () => {
 
 
     const handleLikePost = async () => {
+      
         try {
-            await axios.post(`${backendApiUrlBase}/api/Post/${id}/like`);
-            setPost((prevPost) => ({ ...prevPost, likes: prevPost.likes + 1 }));
+            const response = await axios.post(`${backendApiUrlBase}/api/Post/${id}/like`,{} ,{
+              headers: { Authorization: `Bearer ${authToken}` }
+            });
+            setPost((prevPost) => ({ ...prevPost}));
+            window.location.reload();
         } catch (error) {
             console.error('Error liking post:', error);
         }
@@ -65,8 +82,11 @@ const PostPage = () => {
 
     const handleDislikePost = async () => {
         try {
-            await axios.post(`${backendApiUrlBase}/api/Post/${id}/dislike`);
-            setPost((prevPost) => ({ ...prevPost, dislikes: prevPost.dislikes + 1 }));
+            const response = await axios.post(`${backendApiUrlBase}/api/Post/${id}/dislike`,{} ,{
+              headers: { Authorization: `Bearer ${authToken}` }
+            });
+            setPost((prevPost) => ({ ...prevPost }));
+            window.location.reload();
         } catch (error) {
             console.error('Error disliking post:', error);
         }
@@ -198,6 +218,7 @@ const PostPage = () => {
 
     return (
         <div className="container mx-auto p-4">
+           <Navbar />
             <div className="flex flex-col items-center text-center">
                 <h1 className="text-4xl font-bold mb-2">{post.title || 'Untitled Post'}</h1>
                 {user && (
@@ -254,14 +275,14 @@ const PostPage = () => {
                 >
                     Like
                 </button>
-                <span className="text-green-600 font-bold">Likes: {post.likes}</span>
+                <span className="text-green-600 font-bold">Likes: {likeNum}</span>
                 <button
                     onClick={handleDislikePost}
                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
                 >
                     Dislike
                 </button>
-                <span className="text-red-600 font-bold">Dislikes: {post.dislikes}</span>
+                <span className="text-red-600 font-bold" >Dislikes: {dislikeNum}</span>
             </div>
 
             <div className="comments-section mt-6">
@@ -342,10 +363,10 @@ const PostPage = () => {
                 <textarea
                     placeholder="Reply to this comment..."
                     className="w-full border p-2 rounded mt-2"
-                    onChange={(e) => setNewComment(e.target.value)}
+                    onChange={(e) => setNewReply(e.target.value)}
                 />
                 <button
-                    onClick={() => handleAddReply(comment.id, newComment)}
+                    onClick={() => handleAddReply(comment.id, newReply)}
                     className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
                 >
                     Post Reply

@@ -30,6 +30,7 @@ const Home = () => {
         });
         setPosts(response.data);
         setFilteredPosts(response.data); // Initialize filtered posts
+        console.log(response.data)
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
@@ -50,10 +51,13 @@ const Home = () => {
         if (sortOrder === 'Z-A') {
           return b.title.localeCompare(a.title);
         }
+        if ( sortOrder == 'New'){
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        }
         return 0;
       });
 
-    setFilteredPosts(filtered);
+          setFilteredPosts(filtered);
   }, [searchQuery, sortOrder, posts]);
 
   return (
@@ -79,6 +83,7 @@ const Home = () => {
         >
           <option value="A-Z">Sort A-Z</option>
           <option value="Z-A">Sort Z-A</option>
+          <option value="New">New</option>
         </select>
       </div>
 
@@ -114,8 +119,8 @@ const Home = () => {
                 {post.description || 'No description available.'}
               </p>
               <div className="flex justify-between text-sm font-semibold">
-                <span className="text-green-600">👍 Likes: {post.likes}</span>
-                <span className="text-red-600">👎 Dislikes: {post.dislikes}</span>
+                <span className="text-green-600">👍 Likes: {post.likes == null ? 0 : post.likes.length}</span>
+                <span className="text-red-600">👎 Dislikes: {post.dislikes == null ? 0 :post.likes.length}</span>
               </div>
             </div>
           </div>

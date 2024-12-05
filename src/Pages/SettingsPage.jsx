@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { backendApiUrlBase } from "../constants";
 import { jwtDecode } from "jwt-decode";
+import Navbar from "../Components/Navbar";
 
 const SettingsPage = () => {
     const [username, setUsername] = useState("");
@@ -93,6 +94,8 @@ const SettingsPage = () => {
 
 
     return (
+      <div className="container mx-auto p-4">
+           <Navbar />
         <div className="max-w-2xl mx-auto p-6 bg-gray-100 rounded shadow-md">
             <h1 className="text-2xl font-bold mb-4">Account</h1>
 
@@ -140,6 +143,7 @@ const SettingsPage = () => {
                 </ul>
 
             </div>
+        </div>
         </div>
     );
 };

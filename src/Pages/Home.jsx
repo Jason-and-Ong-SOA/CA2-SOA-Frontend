@@ -6,6 +6,9 @@ import Navbar from '../Components/Navbar';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState('A-Z'); // Default sorting order
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,18 +17,19 @@ const Home = () => {
     if (!authToken) {
       console.log("No auth token found, redirecting to login.");
       navigate('/login');
-      return; // Prevent further execution if not authenticated
+      return;
     }
 
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${backendApiUrlBase}/api/Post/posts`, {
+        const response = await axios.get(`${backendApiUrlBase}/api/Post`, {
           withCredentials: false,
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
         });
         setPosts(response.data);
+        setFilteredPosts(response.data); // Initialize filtered posts
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
@@ -34,79 +38,97 @@ const Home = () => {
     fetchPosts();
   }, [navigate]);
 
+  useEffect(() => {
+    const filtered = posts
+      .filter((post) =>
+        post.title?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      .sort((a, b) => {
+        if (sortOrder === 'A-Z') {
+          return a.title.localeCompare(b.title);
+        }
+        if (sortOrder === 'Z-A') {
+          return b.title.localeCompare(a.title);
+        }
+        return 0;
+      });
+
+    setFilteredPosts(filtered);
+  }, [searchQuery, sortOrder, posts]);
+
   return (
     <div className="container mx-auto p-4">
       <Navbar />
-      <h1 className="text-4xl font-bold mb-6">Trending Posts</h1>
-      <ul className="space-y-8">
-        {posts.map((post) => (
-          <li
-            key={post.id}
-            className="bg-white shadow-lg rounded-lg p-6 flex flex-col gap-6"
-          >
-
-            <Link
-              to={`/post/${post.id}`}
-              className="text-2xl font-semibold text-blue-500 hover:underline"
-            >
-              {post.title || 'Untitled Post'}
-            </Link>
-
-
-            <p className="text-gray-800 text-lg">{post.description || 'No description available.'}</p>
-
-            {post.pictures && post.pictures.length > 0 && (
-              <ImageCarousel pictures={post.pictures} title={post.title} />
-            )}
-
-            <div className="flex gap-6 items-center">
-              <span className="text-green-600 font-bold text-lg">👍 Likes: {post.likes}</span>
-              <span className="text-red-600 font-bold text-lg">👎 Dislikes: {post.dislikes}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
-
-      <Link to="/create-post" className='fixed bottom-20 right-[13rem] text-4xl text-center bg-black rounded-full w-14 h-14 text-white flex justify-center items-center'>
-          <p className=''>+</p>
-      </Link>
-    </div>
-  );
-};
-
-const ImageCarousel = ({ pictures, title }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % pictures.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + pictures.length) % pictures.length);
-  };
-
-  return (
-    <div className="relative w-full">
-      <div className="w-full h-96 relative overflow-hidden rounded-lg shadow-lg">
-        <img
-          src={`${pictures[currentIndex]}`}
-          alt={`Post ${title} - Picture ${currentIndex + 1}`}
-          className="w-full h-full object-contain"
+      <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Trending Posts</h1>
+      
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        {/* Search Bar */}
+        <input
+          type="text"
+          placeholder="Search posts..."
+          className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
+
+        {/* Sort Dropdown */}
+        <select
+          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+        >
+          <option value="A-Z">Sort A-Z</option>
+          <option value="Z-A">Sort Z-A</option>
+        </select>
       </div>
 
-      <button
-        onClick={handlePrev}
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 shadow-lg hover:bg-gray-700"
+      {/* Posts Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredPosts.map((post) => (
+          <div
+            key={post.id}
+            className="bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden transition-shadow duration-300"
+          >
+            <Link to={`/post/${post.id}`}>
+              {post.pictures && post.pictures.length > 0 ? (
+                <img
+                  src={post.pictures[0]}
+                  alt={post.title || 'Untitled Post'}
+                  className="w-full h-56 object-cover"
+                />
+              ) : (
+                <div className="w-full h-56 bg-gray-300 flex items-center justify-center text-gray-500">
+                  No Image
+                </div>
+              )}
+            </Link>
+
+            <div className="p-4 flex flex-col gap-4">
+              <Link
+                to={`/post/${post.id}`}
+                className="text-lg font-bold text-blue-600 hover:underline"
+              >
+                {post.title || 'Untitled Post'}
+              </Link>
+              <p className="text-gray-600 text-sm">
+                {post.description || 'No description available.'}
+              </p>
+              <div className="flex justify-between text-sm font-semibold">
+                <span className="text-green-600">👍 Likes: {post.likes}</span>
+                <span className="text-red-600">👎 Dislikes: {post.dislikes}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Floating "Create Post" Button */}
+      <Link
+        to="/create-post"
+        className="fixed bottom-8 right-8 bg-blue-600 text-white text-4xl rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:bg-blue-500 transition-colors duration-300"
       >
-        &lt;
-      </button>
-      <button
-        onClick={handleNext}
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 shadow-lg hover:bg-gray-700"
-      >
-        &gt;
-      </button>
+        +
+      </Link>
     </div>
   );
 };

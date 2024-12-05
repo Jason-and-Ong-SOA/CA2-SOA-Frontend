@@ -45,11 +45,9 @@ const AddPostPage = () => {
         event.preventDefault();
 
         const postData = {
-            id: "temp",
             title,
             description,
             pictures,
-            userId: user.UserId
         };
 
         try {

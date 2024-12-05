@@ -30,7 +30,7 @@ export const LoginPage = () => {
 
     axios
       .post(`${backendApiUrlBase}/Auth/login`,
-        { username, password },
+        { username, password, email: "" },
         { withCredentials: false }
       )
       .then((res) => {

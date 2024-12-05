@@ -38,11 +38,7 @@ const Navbar = () => {
                     onClick={toggleDropdown}
                     className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded"
                 >
-                    <img
-                        src={profilePicture || 'https://via.placeholder.com/40'}
-                        alt="Profile Icon"
-                        className="h-8 w-8 rounded-full"
-                    />
+
                     <span className="hidden md:block">{user?.username || 'Profile'}</span>
                 </button>
 

@@ -8,11 +8,17 @@ const PostPage = () => {
     const [post, setPost] = useState(null);
     const [user, setUser] = useState(null); 
     
-
+    const authToken = localStorage.getItem('auth');
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`${backendApiUrlBase}/api/Post/post/${id}`);
+                const response = await axios.get(`${backendApiUrlBase}/api/Post/post/${id}`, {
+                    withCredentials: false,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${authToken}`
+                    },
+                });
                 setPost(response.data);
             } catch (error) {
                 console.error('Error fetching post:', error);

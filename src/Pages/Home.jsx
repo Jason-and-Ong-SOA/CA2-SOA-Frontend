@@ -2,22 +2,29 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { backendApiUrlBase } from '../constants';
-
-
+import Navbar from '../Components/Navbar';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-  const authToken = localStorage.getItem('auth');
   const navigate = useNavigate();
 
-  if (authToken === null) {
-    navigate('/login')
-  }
-
   useEffect(() => {
+    const authToken = localStorage.getItem('auth');
+
+    if (!authToken) {
+      console.log("No auth token found, redirecting to login.");
+      navigate('/login');
+      return; // Prevent further execution if not authenticated
+    }
+
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${backendApiUrlBase}/api/Post/posts`, { withCredentials: false, headers: { "Authorization": `Bearer ${authToken}` }}, );
+        const response = await axios.get(`${backendApiUrlBase}/api/Post/posts`, {
+          withCredentials: false,
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
         setPosts(response.data);
       } catch (error) {
         console.error('Error fetching posts:', error);
@@ -25,10 +32,11 @@ const Home = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="container mx-auto p-4">
+      <Navbar />
       <h1 className="text-4xl font-bold mb-6">Trending Posts</h1>
       <ul className="space-y-8">
         {posts.map((post) => (
@@ -58,6 +66,10 @@ const Home = () => {
           </li>
         ))}
       </ul>
+
+      <Link to="/create-post" className='fixed bottom-20 right-[13rem] text-4xl text-center bg-black rounded-full w-14 h-14 text-white flex justify-center items-center'>
+          <p className=''>+</p>
+      </Link>
     </div>
   );
 };
@@ -77,7 +89,7 @@ const ImageCarousel = ({ pictures, title }) => {
     <div className="relative w-full">
       <div className="w-full h-96 relative overflow-hidden rounded-lg shadow-lg">
         <img
-          src={`data:image/png;base64,${pictures[currentIndex]}`}
+          src={`${pictures[currentIndex]}`}
           alt={`Post ${title} - Picture ${currentIndex + 1}`}
           className="w-full h-full object-contain"
         />

@@ -8,28 +8,31 @@ import {
 } from "react-router-dom";
 import { RegisterPage } from './Auth/RegisterPage';
 import { LoginPage } from './Auth/LoginPage';
+import Home from './Pages/Home';
+import PostPage from './Pages/PostPage'; // Import PostPage
 
 const router = createHashRouter([
   {
     path: "/",
-    element: <h1>o</h1>
+    element: <Home />
   },
-
   {
     path: "register",
     element: <RegisterPage />
   },
-
   {
     path: "login",
     element: <LoginPage />
+  },
+  {
+    path: "post/:id",
+    element: <PostPage />
   }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-        <RouterProvider router={router} />
-    </React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );
-

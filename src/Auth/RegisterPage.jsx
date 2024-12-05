@@ -11,6 +11,10 @@ export const RegisterPage = () => {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
+    if (localStorage.getItem('auth') !== null) {
+        navigate('/')
+      }
+
     const validateInputs = () => {
         const newErrors = {};
         if (!username) newErrors.username = 'Username is required';

@@ -1,22 +1,28 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { backendApiUrlBase } from '../constants';
+import { jwtDecode } from 'jwt-decode';
 
 export const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({ username: '', password: '' });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  if (localStorage.getItem('auth') !== null) {
+    navigate('/')
+  }
+
   const validateInputs = () => {
     const newErrors = {};
-    if (!email) newErrors.email = 'Email is required';
+    if (!username) newErrors.username = 'Username is required';
     if (!password) newErrors.password = 'Password is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-};
+  };
+
 
 
   const handleSubmit = (e) => {
@@ -24,11 +30,17 @@ export const LoginPage = () => {
 
     axios
       .post(`${backendApiUrlBase}/Auth/login`,
-        { email, password },
+        { username, password },
         { withCredentials: false }
       )
       .then((res) => {
-        console.log(res)
+        var user = res.data.token
+        localStorage.setItem("auth", user);
+
+        setMessage('Login successful! Redirecting to home...');
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
       })
       .catch((err) => {
         console.error(err);
@@ -52,7 +64,7 @@ export const LoginPage = () => {
               onChange={(e) => setUsername(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            
+
             {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
           </div>
           <div>

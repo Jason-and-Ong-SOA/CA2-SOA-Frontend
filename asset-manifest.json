@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/CA2-SOA-Frontend/static/css/main.aba928fb.css",
-    "main.js": "/CA2-SOA-Frontend/static/js/main.ecb356c9.js",
+    "main.css": "/CA2-SOA-Frontend/static/css/main.ae0c3c17.css",
+    "main.js": "/CA2-SOA-Frontend/static/js/main.5c27e642.js",
     "index.html": "/CA2-SOA-Frontend/index.html",
-    "main.aba928fb.css.map": "/CA2-SOA-Frontend/static/css/main.aba928fb.css.map",
-    "main.ecb356c9.js.map": "/CA2-SOA-Frontend/static/js/main.ecb356c9.js.map"
+    "main.ae0c3c17.css.map": "/CA2-SOA-Frontend/static/css/main.ae0c3c17.css.map",
+    "main.5c27e642.js.map": "/CA2-SOA-Frontend/static/js/main.5c27e642.js.map"
   },
   "entrypoints": [
-    "static/css/main.aba928fb.css",
-    "static/js/main.ecb356c9.js"
+    "static/css/main.ae0c3c17.css",
+    "static/js/main.5c27e642.js"
   ]
 }

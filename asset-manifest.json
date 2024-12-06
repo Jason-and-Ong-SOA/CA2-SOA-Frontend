@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/CA2-SOA-Frontend/static/css/main.ae0c3c17.css",
-    "main.js": "/CA2-SOA-Frontend/static/js/main.5c27e642.js",
+    "main.js": "/CA2-SOA-Frontend/static/js/main.9fbdbb6e.js",
     "index.html": "/CA2-SOA-Frontend/index.html",
     "main.ae0c3c17.css.map": "/CA2-SOA-Frontend/static/css/main.ae0c3c17.css.map",
-    "main.5c27e642.js.map": "/CA2-SOA-Frontend/static/js/main.5c27e642.js.map"
+    "main.9fbdbb6e.js.map": "/CA2-SOA-Frontend/static/js/main.9fbdbb6e.js.map"
   },
   "entrypoints": [
     "static/css/main.ae0c3c17.css",
-    "static/js/main.5c27e642.js"
+    "static/js/main.9fbdbb6e.js"
   ]
 }

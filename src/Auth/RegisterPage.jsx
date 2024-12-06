@@ -32,7 +32,7 @@ export const RegisterPage = () => {
         axios
             .post(`${backendApiUrlBase}/Auth/register`,
                 { username, email, password },
-                { withCredentials: false }
+                { withCredentials: true }
             )
             .then(() => {
                 setMessage('Registration successful! Redirecting to login...');

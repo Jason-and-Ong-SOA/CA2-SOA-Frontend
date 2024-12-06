@@ -31,7 +31,7 @@ export const LoginPage = () => {
     axios
       .post(`${backendApiUrlBase}/Auth/login`,
         { username, password, email: "" },
-        { withCredentials: false }
+        { withCredentials: true }
       )
       .then((res) => {
         var user = res.data.token

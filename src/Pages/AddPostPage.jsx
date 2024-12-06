@@ -56,7 +56,7 @@ const AddPostPage = () => {
                 `${backendApiUrlBase}/api/Post`,
                 postData,
                 {
-                    withCredentials: false,
+                    withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${authToken}`

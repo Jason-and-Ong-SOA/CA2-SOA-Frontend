@@ -1,1 +1,1 @@
-export const backendApiUrlBase = 'http://mapspi.duckdns.org'
+export const backendApiUrlBase = 'https://socialmedia-vdjv.onrender.com'

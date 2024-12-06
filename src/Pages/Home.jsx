@@ -23,7 +23,7 @@ const Home = () => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`${backendApiUrlBase}/api/Post`, {
-          withCredentials: false,
+          withCredentials: true,
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
